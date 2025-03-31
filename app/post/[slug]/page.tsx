@@ -1,16 +1,38 @@
 import { getPostBySlug } from "@/utils/wordpress";
 import { notFound } from "next/navigation";
 
-export default async function PostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getPostBySlug(params.slug);
+// Defina a tipagem para o post do WordPress
+interface WordPressPost {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text?: string;
+    }>;
+  };
+  // Adicione outras propriedades que você usa
+}
+
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function PostPage({ params }: PageProps) {
+  const post: WordPressPost | null = await getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
   }
+
+  const featuredImage = post._embedded?.["wp:featuredmedia"]?.[0];
 
   return (
     <article className="container mx-auto px-4 py-12 max-w-4xl">
@@ -19,10 +41,10 @@ export default async function PostPage({
           {post.title.rendered}
         </h1>
 
-        {post._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
+        {featuredImage?.source_url && (
           <img
-            src={post._embedded["wp:featuredmedia"][0].source_url}
-            alt={post.title.rendered}
+            src={featuredImage.source_url}
+            alt={featuredImage.alt_text || post.title.rendered}
             className="w-full h-64 object-cover mb-8 rounded-lg"
           />
         )}

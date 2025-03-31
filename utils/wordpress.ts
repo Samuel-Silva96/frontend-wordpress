@@ -1,4 +1,4 @@
-const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || 'http://localhost/teste/wp-json/wp/v2'
+const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL || 'http://blog-teste.infy.uk/wp-json/wp/v2/'
 
 interface FetchOptions {
   per_page?: number
