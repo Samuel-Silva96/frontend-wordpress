@@ -1,40 +1,25 @@
 import { getPostBySlug } from "@/utils/wordpress";
 import { notFound } from "next/navigation";
-import type { Metadata } from 'next';
 
-// Tipagem para o post do WordPress
-interface WordPressPost {
+// Defina a tipagem do post em um arquivo separado (types.ts) ou aqui
+type PostType = {
   id: number;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
+  title: { rendered: string };
+  content: { rendered: string };
   _embedded?: {
     "wp:featuredmedia"?: Array<{
       source_url: string;
       alt_text?: string;
     }>;
   };
-}
-// Gere metadados dinâmicos (opcional)
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
-  
-  return {
-    title: post?.title.rendered || 'Post não encontrado',
-  };
-}
+};
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post: WordPressPost | null = await getPostBySlug(params.slug);
+export default async function Page({ params }: { params: { slug: string } }) {
+  const post = await getPostBySlug(params.slug) as PostType | null;
 
   if (!post) {
     notFound();
   }
-
-  const featuredImage = post._embedded?.["wp:featuredmedia"]?.[0];
 
   return (
     <article className="container mx-auto px-4 py-12 max-w-4xl">
@@ -43,12 +28,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
           {post.title.rendered}
         </h1>
 
-        {featuredImage?.source_url && (
+        {post._embedded?.["wp:featuredmedia"]?.[0]?.source_url && (
           <img
-            src={featuredImage.source_url}
-            alt={featuredImage.alt_text || post.title.rendered}
+            src={post._embedded["wp:featuredmedia"][0].source_url}
+            alt={post._embedded["wp:featuredmedia"][0].alt_text || post.title.rendered}
             className="w-full h-64 object-cover mb-8 rounded-lg"
-            loading="lazy"
           />
         )}
 
