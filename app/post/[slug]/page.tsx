@@ -1,7 +1,8 @@
 import { getPostBySlug } from "@/utils/wordpress";
 import { notFound } from "next/navigation";
+import type { Metadata } from 'next';
 
-// Defina a tipagem para o post do WordPress
+// Tipagem para o post do WordPress
 interface WordPressPost {
   id: number;
   title: {
@@ -16,16 +17,17 @@ interface WordPressPost {
       alt_text?: string;
     }>;
   };
-  // Adicione outras propriedades que você usa
 }
-
-interface PageProps {
-  params: {
-    slug: string;
+// Gere metadados dinâmicos (opcional)
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+  
+  return {
+    title: post?.title.rendered || 'Post não encontrado',
   };
 }
 
-export default async function PostPage({ params }: PageProps) {
+export default async function PostPage({ params }: { params: { slug: string } }) {
   const post: WordPressPost | null = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -46,6 +48,7 @@ export default async function PostPage({ params }: PageProps) {
             src={featuredImage.source_url}
             alt={featuredImage.alt_text || post.title.rendered}
             className="w-full h-64 object-cover mb-8 rounded-lg"
+            loading="lazy"
           />
         )}
 
