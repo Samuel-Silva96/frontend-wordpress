@@ -1,4 +1,4 @@
-import { getPostBySlug } from '@utils/wordpress.js';
+import { getPostBySlug } from '@utils/wordpress';
 import { notFound } from "next/navigation";
 
 // Defina a tipagem do post em um arquivo separado (types.ts) ou aqui
