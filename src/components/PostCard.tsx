@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WPPost } from "@/types/wordpress";
+import { WPPost } from "@types/wordpress";
 
 export default function PostCard({ post }: { post: WPPost }) {
   return (

@@ -1,4 +1,4 @@
-import { getPageBySlug } from "../../utils/wordpress";
+import { getPageBySlug } from "@utils/wordpress.js";
 import { notFound } from "next/navigation";
 
 export default async function ContactPage() {

@@ -1,5 +1,5 @@
-import PostCardHome from "../../components/PostCardHome";
-import { getPosts } from "../../utils/wordpress";
+import PostCardHome from "@components/PostCardHome";
+import { getPosts } from "@utils/wordpress";
 
 export default async function Home() {
   const posts = await getPosts();
