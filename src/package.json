@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build src",
+    "build": "next build",
+    "postinstall": "next telemetry disable",
     "start": "next start",
     "lint": "next lint" 
   },
